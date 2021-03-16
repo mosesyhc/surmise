@@ -401,6 +401,9 @@ def emulation_fit(theta, pcaval):
                          options={'disp': False},
                          jac=emulation_negloglikgrad)
 
+    # Obtain the negative log likelihood at the optimized values
+    nll = opval.fun
+
     # Obtain the optimized hyperparameter values
     hypcov = opval.x[:subinfo['p']]
     hypnug = opval.x[subinfo['p']]
@@ -431,6 +434,7 @@ def emulation_fit(theta, pcaval):
     subinfo['muhat'] = muhat
     subinfo['sigma2hat'] = sigma2hat
     subinfo['theta'] = theta
+    subinfo['negloglik'] = nll
 
     return subinfo
 

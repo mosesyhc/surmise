@@ -109,6 +109,7 @@ def fit(fitinfo, emu, x, y,  args=None):
             # obtain the log-likelihood and the gradient of it
             loglikinds, dloglikinds = loglik_grad(fitinfo,
                                                   emu,
+                                                  emu_bias,
                                                   theta[inds, :],
                                                   y,
                                                   x,

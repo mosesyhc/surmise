@@ -392,12 +392,11 @@ def bias_fit(fitinfo, emu, x, y, theta0=None):
         emupredmean = emu.predict(x, theta).mean()
         bias = y.reshape((len(y), 1)) - emupredmean
 
-        emu_bias = emulator(x=np.ones((1, 1)), theta=x, f=bias, )
+        emu_bias = emulator(x=np.ones((1, 1)), theta=x, f=bias)
 
         nll = 0
         for k in range(len(emu_bias._info['emulist'])):
             nll += emu_bias._info['emulist'][k]['negloglik']
-
         return np.squeeze(-thetaprior.lpdf(theta) + nll)
 
     opval = spo.minimize(obj, theta0, args=(emu, x, y), method='Nelder-Mead')

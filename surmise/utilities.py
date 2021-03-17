@@ -1,4 +1,5 @@
 import importlib
+import numpy as np
 
 
 class sampler(object):
@@ -29,8 +30,9 @@ class sampler(object):
         self.logpostfunc = logpostfunc
         self.options = options
         self.sampler_info = {}
-        self.draw_samples(method)
 
+        print(np.random.uniform(0, 1))
+        self.draw_samples(method)
     def draw_samples(self, method):
         '''
         Calls "utilitiesmethods.[method].sampler" where [method] is the

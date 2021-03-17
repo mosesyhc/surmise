@@ -238,7 +238,7 @@ def thetalpdf(fitinfo, theta, args=None):
 
     Not required.
     '''
-
+    emu_bias = fitinfo['bias']
     emu = fitinfo['emu']
     y = fitinfo['y']
     x = fitinfo['x']
@@ -246,9 +246,9 @@ def thetalpdf(fitinfo, theta, args=None):
     logpost = thetaprior.lpdf(theta)
     if logpost.ndim > 0.5 and logpost.shape[0] > 1.5:
         inds = np.where(np.isfinite(logpost))[0]
-        logpost[inds] += loglik(fitinfo, emu, theta[inds], y, x, args)
+        logpost[inds] += loglik(fitinfo, emu, emu_bias, theta[inds], y, x, args)
     elif np.isfinite(logpost):
-        logpost += loglik(fitinfo, emu, theta, y, x, args)
+        logpost += loglik(fitinfo, emu, emu_bias, theta, y, x, args)
     return (logpost-fitinfo['lpdfapproxnorm'])
 
 

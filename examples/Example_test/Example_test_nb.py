@@ -196,8 +196,9 @@ def plot_pred(x_std, xrep, y, cal, theta_range):
         bias = cal.info['bias'].predict(theta=x_std)
         upperb = np.squeeze(bias.mean() + np.sqrt(1.96*bias.var()))
         lowerb = np.squeeze(bias.mean() - np.sqrt(1.96*bias.var()))
-        axs[3].plot(xrep[0:21].reshape(21), bias.mean().T, color='grey')
-        axs[3].fill_between(xrep[0:21].reshape(21), lowerb, upperb, color = 'grey', alpha=0.5)
+        axs[3].plot(xrep[0:21].reshape(21), bias.mean().T, color='grey', linestyle='--')
+        axs[3].fill_between(xrep[0:21].reshape(21), lowerb, upperb,
+                            color = 'grey', alpha=0.5)
         axs[3].plot(xrep[0:21].reshape(21), b(xrep[0:21]), color='green')
 
 
@@ -226,7 +227,7 @@ cal_2 = calibrator(emu=emulator_1,
                    y=y,
                    x=xrep_std,
                    thetaprior=prior_balldrop,
-                   method='directbayeswoodbury',
+                   method='directbayeswoodbury_discrep_mod',
                    yvar=obsvar)
 
 plot_pred(x_std, xrep, y, cal_2, theta_range)

@@ -197,9 +197,10 @@ def predict(predinfo, fitinfo, emu, x, args=None):
     emumean = emupredict.mean() + emubias.mean().T
     emucovxhalf = emupredict.covxhalf()
     varfull = np.sum(np.square(emucovxhalf), axis=2)
+    emubiascovxhalf = np.squeeze(emubias.covxhalf())
 
     for k in range(0, theta.shape[0]):
-        re = emucovxhalf[:, k, :] @ \
+        re = (emucovxhalf[:, k, :] + emubiascovxhalf.reshape(x.shape[0], 1)) @ \
             sps.norm.rvs(0, 1, size=(emucovxhalf.shape[2]))
         predinfo['rnd'][k, :] += re
 
@@ -265,6 +266,7 @@ def loglik(fitinfo, emu, emu_bias, theta, y, x, args):
     emumean = emupredict.mean() + emubias.mean().T
     emuvar = emupredict.var() + emubias.var().T
     emucovxhalf = emupredict.covxhalf()
+    emubiascovxhalf = np.squeeze(emubias.covxhalf())
     loglik = np.zeros((emumean.shape[1], 1))
 
     if np.any(np.abs(emuvar/(10 ** (-4) +
@@ -279,7 +281,7 @@ def loglik(fitinfo, emu, emu_bias, theta, y, x, args):
     # compute loglikelihood for each theta value in theta
     for k in range(0, emumean.shape[1]):
         m0 = emumean[:, k]
-        S0 = np.squeeze(emucovxhalf[:, k, :])
+        S0 = np.squeeze(emucovxhalf[:, k, :] + emubiascovxhalf.reshape(x.shape[0], 1))
         stndresid = (np.squeeze(y) - m0) / np.sqrt(obsvar)
         term1 = np.sum(stndresid ** 2)
         J = (S0.T / np.sqrt(obsvar)).T
@@ -314,6 +316,7 @@ def loglik_grad(fitinfo, emu, emu_bias, theta, y, x, args):
     emumean = emupredict.mean()
     emuvar = emupredict.var() + emubias.var().T
     emucovxhalf = emupredict.covxhalf()
+    emubiascovxhalf = np.squeeze(emubias.covxhalf())
     emumean_grad = emupredict.mean_gradtheta()
     emucovxhalf_grad = emupredict.covxhalf_gradtheta()
 
@@ -337,7 +340,7 @@ def loglik_grad(fitinfo, emu, emu_bias, theta, y, x, args):
     for k in range(0, emumean.shape[1]):
         m0 = emumean[:, k]
         dm0 = np.squeeze(emumean_grad[:, k, :])
-        S0 = np.squeeze(emucovxhalf[:, k, :])
+        S0 = np.squeeze(emucovxhalf[:, k, :] + emubiascovxhalf.reshape(x.shape[0], 1))
         stndresid = (np.squeeze(y) - m0) / np.sqrt(obsvar)
         term1 = np.sum(stndresid ** 2)
         stndresid_grad = - (dm0.T / np.sqrt(obsvar)).T

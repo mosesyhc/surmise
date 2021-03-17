@@ -36,6 +36,8 @@ from surmise.calibration import calibrator
 # The data include 63 field observations at 21 heights, with three replicates at each height. Let's read the real data first, and then visualize:
 
 # %%
+np.random.seed(12)
+
 # Read the data
 ball = np.loadtxt('ball.csv', delimiter=',')
 m = len(ball)
@@ -263,7 +265,7 @@ plot_pred(x_std, xrep, y, cal_2, theta_range)
 
 # %%
 # Fit a calibrator via method = 'directbayes' and 'sampler' : 'LMC'
-cal_3 = calibrator(emu=emulator_1,
+cal_3_d = calibrator(emu=emulator_1,
                    y=y,
                    x=xrep_std,
                    thetaprior=prior_balldrop,
@@ -272,6 +274,48 @@ cal_3 = calibrator(emu=emulator_1,
                    args={'sampler': 'LMC',
                          'theta0': prior_balldrop.rnd(1000)})
 
+plot_pred(x_std, xrep, y, cal_3_d, theta_range, 'with_disc')
+
+# %%
+# Fit a calibrator via method = 'directbayes' and 'sampler' : 'LMC'
+cal_3 = calibrator(emu=emulator_1,
+                   y=y,
+                   x=xrep_std,
+                   thetaprior=prior_balldrop,
+                   method='directbayeswoodbury',
+                   yvar=obsvar,
+                   args={'sampler': 'LMC',
+                         'theta0': prior_balldrop.rnd(1000)})
+
 plot_pred(x_std, xrep, y, cal_3, theta_range)
+
+#%%
+
+def crps(f,fdraw,mv=None):
+    if mv is not None:
+        notfail = mv < 0.5
+    else:
+        notfail = ~np.isnan(f)
+
+    if fdraw.ndim == 2:
+        N, n = fdraw.shape
+
+        savg = np.mean(np.abs(f[notfail]-fdraw[notfail]))
+
+    else:
+        N, n, m = fdraw.shape
+
+        linpart = (np.abs(fdraw - f[...,np.newaxis])).mean(axis=2)
+        quadpart = 0
+        for k in np.arange(m):
+            quadpart -= 0.5/m*(np.abs(fdraw[:,:,k,np.newaxis] - fdraw).mean(axis=2))
+
+        s = linpart[notfail] + quadpart[notfail]
+
+        savg = s.mean()
+
+    return savg
+
+cal_1.predict(xrep_std)
 
 

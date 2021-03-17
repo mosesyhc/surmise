@@ -279,4 +279,3 @@ cal_3 = calibrator(emu=emulator_1,
 
 plot_pred(x_std, xrep, y, cal_3, theta_range)
 
-

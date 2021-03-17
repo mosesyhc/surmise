@@ -36,7 +36,7 @@ from surmise.calibration import calibrator
 # The data include 63 field observations at 21 heights, with three replicates at each height. Let's read the real data first, and then visualize:
 
 # %%
-np.random.seed(12)
+np.random.seed(9)
 
 # Read the data
 ball = np.loadtxt('ball.csv', delimiter=',')

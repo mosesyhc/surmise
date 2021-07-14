@@ -605,6 +605,7 @@ def __fitGPs(fitinfo, theta, numpcs, hyp1, hyp2):
     emulist = [dict() for x in range(0, numpcs)]
     for iters in range(0, 3):
         for pcanum in range(0, numpcs):
+            print('PCA #{:d} with std {:.3f}'.format(pcanum, np.std(fitinfo['pc'][:, pcanum])))
             if np.sum(hypinds == np.array(range(0, numpcs))) > 0.5:
                 hypwhere = np.where(hypinds == np.array(range(0, numpcs)))[0]
                 emulist[pcanum] = __fitGP1d(theta=theta,
@@ -739,6 +740,8 @@ def __fitGP1d(theta, g, hyp1, hyp2, gvar=None, hypstarts=None, hypinds=None,
         subinfo['Rinv'] = Vh @ Vh.T
         subinfo['Vh'] = Vh
     subinfo['pw'] = subinfo['Rinv'] @ g
+
+    print('optimized nugget in PCGPwM = {:.3E}'.format(subinfo['nug']))
     return subinfo
 
 

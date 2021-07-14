@@ -59,6 +59,7 @@ def fit(fitinfo, x, theta, f, epsilon=0.1, **kwargs):
 
     # fit a GP for each PC
     for pcanum in range(0, numpcs):
+        print('PCA #{:d} with std {:.3f}'.format(pcanum, np.std(fitinfo['pc'][:, pcanum])))
         emulist[pcanum] = emulation_fit(theta, fitinfo['pc'][:, pcanum])
 
     fitinfo['emulist'] = emulist
@@ -370,9 +371,9 @@ def emulation_fit(theta, pcaval):
     covhypLB = covhyp0 - 2
     covhypUB = covhyp0 + 3
 
-    nughyp0 = -6
+    nughyp0 = -10
     nughypLB = -15
-    nughypUB = 1
+    nughypUB = -8
 
     # Get a random sample of thetas to find the optimized hyperparameters
     n_train = np.min((20*theta.shape[1], theta.shape[0]))
@@ -405,6 +406,7 @@ def emulation_fit(theta, pcaval):
     hypcov = opval.x[:subinfo['p']]
     hypnug = opval.x[subinfo['p']]
 
+    print('optimized nugget in PCGP, {:.3E}'.format(np.exp(hypnug)))
     # Obtain the covariance matrix
     R = emulation_covmat(theta, theta, hypcov)
     R = R + np.exp(hypnug)*np.diag(np.ones(R.shape[0]))

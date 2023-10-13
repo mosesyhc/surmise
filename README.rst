@@ -8,8 +8,8 @@
    :target: https://surmise.readthedocs.io/en/latest/?badge=latest
    :alt: Documentation Status
 
-.. image:: https://github.com/surmising/surmise/actions/workflows/python-package.yml/badge.svg
-    :target: https://github.com/surmising/surmise/actions/workflows/python-package.yml
+.. image:: https://github.com/bandframework/surmise/actions/workflows/python-package.yml/badge.svg
+    :target: https://github.com/bandframework/surmise/actions/workflows/python-package.yml
 
 |
 
@@ -24,73 +24,72 @@ interface for calibration, uncertainty quantification, and sensitivity analysis.
 
 Dependencies
 ~~~~~~~~~~~~
+surmise is build for Python 3.8 or above, with the following dependencies:
 
-.. list-table:: Required dependencies:
-   :widths: 25 50 50
-   :header-rows: 1
-
-   * - Python_
-     - NumPy_
-     - SciPy_
-   * - 3.7
-     - 1.16, 1.17, 1.18, 1.19
-     - 1.4
-   * - 3.8
-     - 1.18, 1.19
-     - 1.4
-   * - 3.9
-     - 1.20
-     - 1.6
-
-Some examples require the optional dependency
-
-* GPy_
-
+* numpy>=1.18.3
+* scipy>=1.7
+* scikit-learn>=1.2.0
 
 Installation
 ~~~~~~~~~~~~
 
 From the command line, use the following command to install surmise::
 
- pip install surmise==0.1.0
+ pip install surmise
 
+The list of available .whl files can be found under `PyPI-wheel`_.  If a wheel file
+for your preferred platform is not listed, surmise has to be built from source,
+which requires extra dependencies::
 
-Alternatively, the source code can be downloaded to the local folder, and the
-package can be installed from the .tar file.
+ git clone https://github.com/bandframework/surmise/
+ cd surmise
+ pip install -r requirements.txt
+
+.. note::
+
+    Direct installation of surmise requires Cython to build C executable.
+    On Windows platform Cython is supported by Microsoft build tools, for which installation
+    is outside pip.  See `Microsoft build tools`_ for details.
 
 Testing
 ~~~~~~~
 
-The test suite requires the pytest_ and pytest-cov_ packages to be installed
-and can be run from the ``tests/`` directory of the source distribution by running::
+Testing of surmise can be performed after cloning the repository. The test suite requires the pytest_ and 
+pytest-cov_ packages to be installed.  These packages can be installed via::
 
-./run-tests.sh
+ pip install pytest pytest-cov
 
-If you have the source distribution, you can run the tests in the top-level
-directory containing the setup script with ::
+The test suite can then be run from within the ``tests/`` directory of the source distribution by running::
 
- python setup.py test
+ cd tests
+ ./run-tests.sh
 
 Further options are available for testing. To see a complete list of options, run::
 
  ./run-tests.sh -h
 
-Coverage reports are produced under the relevant directory only if all tests are used.
+Coverage reports are produced under ``tests/cov_html`` directory only if all tests are used.
 
 Documentation
 ~~~~~~~~~~~~~
 
 The documentation is stored in ``docs/`` and is compiled with the Sphinx Python
-documentation generator. It is written in the reStructuredText format. These
-files are hosted at `Read the Docs <http://surmise.readthedocs.io>`_.
+documentation generator. It is written in the reStructuredText format. The
+documentation is hosted at `Read the Docs <http://surmise.readthedocs.io>`_.
 
-To compile the documentation, first ensure that Sphinx is installed. Then, to
-generate documentation, run command ``make html`` from terminal within this directory as follows ::
+To compile the documentation, first ensure that Sphinx and its dependencies are installed.
+To install Sphinx and/or ensure compatibility of dependencies, run ``make`` from a terminal within the ``docs/``
+directory::
 
  cd docs
+ make
+
+To generate documentation, run command ``make html`` from a terminal within the ``docs/`` directory::
+
+ (cd docs)
  make html
 
-The HTML files are then stored in ``docs/_build/html``
+The HTML files are then stored in ``docs/_build/html``.
 
 
 **Citation:**
@@ -99,12 +98,12 @@ The HTML files are then stored in ``docs/_build/html``
 
 .. code-block:: bibtex
 
-   @techreport{surmise2021,
-     author      = {Matthew Plumlee and Özge Sürer and Stefan M. Wild},
-     title       = {Surmise Users Manual},
+   @techreport{surmise2023,
+     author      = {Matthew Plumlee and \"Ozge S\"urer and Stefan M. Wild and Moses Y-H. Chan},
+     title       = {{surmise 0.2.1} Users Manual},
      institution = {NAISE},
-     number      = {Version 0.1.0},
-     year        = {2021},
+     number      = {Version 0.2.1},
+     year        = {2023},
      url         = {https://surmise.readthedocs.io}
    }
 
@@ -114,9 +113,14 @@ Examples
 We provide examples in the ``examples/`` directory to illustrate the basic usage
 of surmise.
 
+In addition, for a gentle introduction of emulation and calibration using Gaussian processes, visit
+`surmise Jupyter notebook`_.
+
 .. _NumPy: http://www.numpy.org
 .. _pytest-cov: https://pypi.org/project/pytest-cov/
 .. _pytest: https://pypi.org/project/pytest/
 .. _Python: http://www.python.org
 .. _SciPy: http://www.scipy.org
-.. _GPy: https://gpy.readthedocs.io/en/deploy/
+.. _`surmise Jupyter notebook`: https://colab.research.google.com/drive/1f4gKTCLEAGE8r-aMWOoGvY-O6zNqg1qj?usp=drive_link
+.. _PyPI-wheel: https://pypi.org/project/surmise/#files
+.. _`Microsoft build tools`: https://visualstudio.microsoft.com/downloads/?q=build+tools
